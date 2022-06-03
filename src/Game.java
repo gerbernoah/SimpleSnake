@@ -7,7 +7,11 @@ import javax.swing.*;
 
 public class Game extends JPanel implements ActionListener
 {
-    private final Color HEAD = Color.YELLOW, TAIL = Color.RED, APPLE = Color.GREEN;
+    private final Color
+            HEAD = new Color(91, 18, 216),
+            TAIL = new Color(49, 120, 158),
+            APPLE = new Color(158, 36, 36),
+            BG = new Color(184, 218, 153);
     private final int fieldWidth = 800, fieldHeight = 800, squareSize = 40, delay = 140;
     private final int[] x = new int[fieldWidth * fieldHeight / squareSize], y = new int[fieldHeight * fieldHeight / squareSize];;
     private int foodX, foodY, length;
@@ -38,7 +42,7 @@ public class Game extends JPanel implements ActionListener
                 }
             }
         });
-        setBackground(Color.black);
+        setBackground(BG);
         setFocusable(true);
 
         setPreferredSize(new Dimension(fieldWidth, fieldHeight));
@@ -69,7 +73,7 @@ public class Game extends JPanel implements ActionListener
         if (inGame)
         {
             g.setColor(APPLE);
-            g.drawOval(foodX - squareSize / 2, foodY - squareSize / 2, squareSize, squareSize);
+            g.fillOval(foodX - squareSize / 2, foodY - squareSize / 2, squareSize, squareSize);
 
             for (int z = 0; z < length; z++)
             {
