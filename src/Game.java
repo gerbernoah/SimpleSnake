@@ -10,9 +10,9 @@ public class Game extends JPanel implements ActionListener
     private final Color
             HEAD = new Color(91, 18, 216),
             TAIL = new Color(49, 120, 158),
-            APPLE = new Color(158, 36, 36),
+            FOOD = new Color(158, 36, 36),
             BG = new Color(184, 218, 153);
-    private final int fieldWidth = 800, fieldHeight = 800, squareSize = 40, delay = 140;
+    private final int fieldWidth = 400, fieldHeight = 400, squareSize = 40, delay = 140;
     private final int[] x = new int[fieldWidth * fieldHeight / squareSize], y = new int[fieldHeight * fieldHeight / squareSize];;
     private int foodX, foodY, length;
     private Direction direction = Direction.RIGHT;
@@ -72,8 +72,8 @@ public class Game extends JPanel implements ActionListener
 
         if (inGame)
         {
-            g.setColor(APPLE);
-            g.fillOval(foodX - squareSize / 2, foodY - squareSize / 2, squareSize, squareSize);
+            g.setColor(FOOD);
+            g.fillOval(foodX, foodY, squareSize, squareSize);
 
             for (int z = 0; z < length; z++)
             {
@@ -81,7 +81,7 @@ public class Game extends JPanel implements ActionListener
                     g.setColor(HEAD);
                 else
                     g.setColor(TAIL);
-                g.fillRect(x[z] - squareSize / 2, y[z] - squareSize / 2, squareSize, squareSize);
+                g.fillRect(x[z], y[z], squareSize, squareSize);
             }
             Toolkit.getDefaultToolkit().sync();
         } else
@@ -124,15 +124,24 @@ public class Game extends JPanel implements ActionListener
 
     private void spawnFood()
     {
-        int fieldNumbersX = fieldWidth / squareSize;
-        int fieldNumbersY = fieldHeight / squareSize;
+        start:
+        while (true)
+        {
+            //placing apples not in the border
+            int foodXPos = (int) (Math.random() * (fieldWidth / squareSize - 2) + 1) * squareSize;
+            int foodYPos = (int) (Math.random() * (fieldHeight / squareSize - 2) + 1) * squareSize;
 
-        //placing apples not in the border
-        int appleXField = (int) (Math.random() * (fieldNumbersX - 2) + 1);
-        int appleYField = (int) (Math.random() * (fieldNumbersY - 2) + 1);
-
-        foodX = appleXField * squareSize;
-        foodY = appleYField * squareSize;
+            for (int z = 0; z < length; z++)
+            {
+                if (x[z] == foodXPos && y[z] == foodYPos)
+                {
+                    continue start;
+                }
+            }
+            foodX = foodXPos;
+            foodY = foodYPos;
+            break;
+        }
     }
 
     @Override
@@ -141,7 +150,7 @@ public class Game extends JPanel implements ActionListener
         if (inGame)
         {
             //apple eaten
-            if ((x[0] == foodX) && (y[0] == foodY))
+            if (x[0] == foodX && y[0] == foodY)
             {
                 length++;
                 spawnFood();
